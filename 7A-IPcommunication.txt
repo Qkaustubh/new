@@ -1,0 +1,142 @@
+//PROCESS1
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#define MAX_BUFFER_SIZE 100
+
+int main() {
+    int pipe1[2], pipe2[2];
+    pid_t pid;
+
+    // Create two pipes
+    if (pipe(pipe1) == -1 || pipe(pipe2) == -1) {
+        perror("Pipe creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Create a child process
+    pid = fork();
+
+    if (pid == -1) {
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (pid > 0) {  // Parent process (Process 1)
+        close(pipe1[0]);  // Close unused read end of pipe1
+        close(pipe2[1]);  // Close unused write end of pipe2
+
+        char sentence[MAX_BUFFER_SIZE];
+
+        while (1) {
+            // Get user input
+            printf("Enter a sentence (or 'exit' to quit): ");
+            fgets(sentence, MAX_BUFFER_SIZE, stdin);
+
+            // Write to pipe1
+            write(pipe1[1], sentence, strlen(sentence));
+
+            // Exit if the user enters 'exit'
+            if (strncmp(sentence, "exit", 4) == 0)
+                break;
+
+            // Read from pipe2 and display the result
+            char result[MAX_BUFFER_SIZE];
+            read(pipe2[0], result, MAX_BUFFER_SIZE);
+            printf("Result from Process 2:\n%s", result);
+        }
+
+        // Close remaining pipe ends
+        close(pipe1[1]);
+        close(pipe2[0]);
+    } else {  // Child process (Process 2)
+        close(pipe1[1]);  // Close unused write end of pipe1
+        close(pipe2[0]);  // Close unused read end of pipe2
+
+        // Redirect standard input to pipe1
+        dup2(pipe1[0], STDIN_FILENO);
+        close(pipe1[0]);
+
+        // Redirect standard output to pipe2
+        dup2(pipe2[1], STDOUT_FILENO);
+        close(pipe2[1]);
+
+        // Execute Process 2 program
+        execlp("./process2", "process2", NULL);
+
+        perror("Exec failed");
+        exit(EXIT_FAILURE);
+    }
+
+    return 0;
+}
+
+
+
+
+
+//PROCESS2
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_BUFFER_SIZE 100
+
+int main() {
+    char sentence[MAX_BUFFER_SIZE];
+
+    while (1) {
+        // Read from pipe1
+        fgets(sentence, MAX_BUFFER_SIZE, stdin);
+
+        // Exit if the input is 'exit'
+        if (strncmp(sentence, "exit", 4) == 0)
+            break;
+
+        // Process the sentence (count characters, words, and lines)
+        int charCount = 0, wordCount = 0, lineCount = 0;
+        for (int i = 0; sentence[i] != '\0'; i++) {
+            charCount++;
+
+            // Increment word count if a space is encountered
+            if (sentence[i] == ' ' || sentence[i] == '\t' || sentence[i] == '\n')
+                wordCount++;
+
+            // Increment line count if a newline is encountered
+            if (sentence[i] == '\n')
+                lineCount++;
+        }
+
+        // Write the results to a file
+        FILE *file = fopen("result.txt", "w");
+        if (file == NULL) {
+            perror("Error opening file");
+            exit(EXIT_FAILURE);
+        }
+
+        fprintf(file, "Character count: %d\n", charCount);
+        fprintf(file, "Word count: %d\n", wordCount + 1);  // Adding 1 to account for the last word
+        fprintf(file, "Line count: %d\n", lineCount);
+
+        fclose(file);
+
+        // Read the contents of the file and write to pipe2
+        file = fopen("result.txt", "r");
+        if (file == NULL) {
+            perror("Error opening file");
+            exit(EXIT_FAILURE);
+        }
+
+        char fileContents[MAX_BUFFER_SIZE];
+        while (fgets(fileContents, MAX_BUFFER_SIZE, file) != NULL) {
+            printf("%s", fileContents);
+            fflush(stdout);  // Flush the output buffer to ensure immediate display
+        }
+
+        fclose(file);
+    }
+
+    return 0;
+}
