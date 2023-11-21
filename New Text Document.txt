@@ -1,0 +1,79 @@
+Assignement 1A:
+Commands description
+Syntax of all commands
+Options related to commands(atleast 3)
+echo, ls, read, cat, touch, test, loops, arithmetic comparison, conditional loops, grep, sed etc.
+
+Assignment 1B:
+What is shell scripting?
+What are different types of shell?
+What is the use of shell scripting?
+How to run code of shell scripting?
+Assignment 2:
+What is system call?
+What is fork system call?
+What are the return values of fork?
+What is pid?
+What is ppid?
+How to get the values of pid and ppid? (getpid, getppid)
+What is wait system call?
+What is execve system call?
+How to create orphan and zombie state using wait system call?
+Assignment 3:
+What is waiting time?
+What is turnaround time?
+What is Burst time?
+What is arrival time?
+What is the formula for waiting time?
+What is the formula for turnaround  time?
+What are other scheduling algorithm?
+What are the criteria of SJF?
+What is the criteria for RR?
+Assignment 4:
+What is producer consumer/reader writer problem?
+What is up and down code?
+What is pseudo code for producer consumer/Reader writer problem?
+What is critical section?
+What is mutual exclusion?
+What is pseudo code for producer consumer / reader writer problem using sempahore?
+Difference between producer and consumer/ reader writer?
+What is process synchronization?
+
+Assignment No 5:
+What is deadlock?
+What are the necessary conditions for deadlock?
+What is the use of bankers’ algorithm?
+What are the Strategies to deal with deadlock? (Prevention, Avoidance, Detection and Recovery)
+How bankers algorithm avoid deadlock?
+What is need matrix, allocation matrix and maximum matrix?
+Steps to solve the problem of banker algorithm?
+Assignment No 6:
+What is virtual memory?
+What is physical and logical address?
+What is page?
+What is frames?
+Mapping of addresses?
+What is the concept of paging?
+What are the page replacement policies?
+What is page fault?
+What is page hit?
+Concept of LRU, Optimal and FIFO in detail.
+Difference between paging and segmentation.
+Assignment no 7:
+What is Interprocess communication?
+What is cooperating processes?
+What are the two ways of interprocess communication (Message passing and shared memory)?
+What is Message passing? Explain in detail
+What is Shared memory? Explain in detail.
+What is pipes?
+Which functions are used to create pipes?
+Which functions are used to create shared memory?
+Assignment No 8:
+What is seek time?
+What is the use of SSTF, SCAN and C-LOOK?
+What is disk scheduling?
+What is head?
+What are three factors that determine that determine disk arm scheduling algorithm?(Seek time, rotational delay, actual data transfer time)
+Working of SSTF, SCAN and C-LOOK.
+
+
